@@ -1,0 +1,4 @@
+name = Druphone
+description = "Druphone administration module"
+package = Phone
+core = 6.x
