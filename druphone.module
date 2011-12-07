@@ -56,7 +56,7 @@ function admin_settings_druphone(){
 
 function admin_settings_druphone_validate($node, &$form_state){
 	$themes = $form_state['values']['theme'];
-	drupal_set_message("You submitted a valid color: ".$form_state['values']['theme']);
+	drupal_set_message("You submitted a ".$form_state['values']['theme']);
 }
 
 function admin_settings_druphone_submit($node, &$form_state){
