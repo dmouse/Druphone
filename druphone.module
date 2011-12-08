@@ -16,6 +16,12 @@ function druphone_menu() {
     'access arguments' => array('Admin dphone options'),
   );
   
+  $items['druphone/regions/list'] = array(
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('Admin dphone options'),
+    'page callback' => 'druphone_regions_list',
+  );
+  
   $items['druphone/regions'] = array(
     'type' => MENU_CALLBACK,
     'access arguments' => array('Admin dphone options'),
@@ -65,27 +71,32 @@ function admin_settings_druphone_submit($node, &$form_state){
 	
 }
 
+function druphone_regions_list(){
+	
+	$list = array();
+	
+	foreach (system_region_list("garland") as $var => $key)
+		$list[$var] = $key;
+	
+	echo json_encode(array('status' => 0, 'data' => $list ));
+}
+
 function druphone_regions(){
 	
 	global $theme_key;
 	$tmp = $theme_key;
-	
 	$theme_key = "garland";
 	
+	
+	$region = mysql_escape_string ($_POST ['r']);
 	$regions = array();
+	
 	foreach (system_region_list("garland") as $var => $key){
-		$regions[$var] = array(
-			"blocks" => json_encode(theme_blocks("footer"))
-		);
+		if ($var == $region)
+		$regions[$var] = array("blocks" => json_encode(theme_blocks($region)));
 	}
-	
 
-	
-	
-	$region = mysql_escape_string ($_GET ['r']);
-
-	drupal_json(array('status' => 0, 'data' => $regions ));
+	echo json_encode(array('status' => 0, 'data' => $regions ));
 	
 	$theme_key = $tmp;
-	
 }
