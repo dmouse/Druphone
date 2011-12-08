@@ -67,15 +67,25 @@ function admin_settings_druphone_submit($node, &$form_state){
 
 function druphone_regions(){
 	
-
-	print_r(system_region_list('garland'));
+	global $theme_key;
+	$tmp = $theme_key;
 	
-	print_r( block_list('left') );
+	$theme_key = "garland";
+	
+	$regions = array();
+	foreach (system_region_list("garland") as $var => $key){
+		$regions[$var] = array(
+			"blocks" => json_encode(theme_blocks("footer"))
+		);
+	}
+	
+
 	
 	
 	$region = mysql_escape_string ($_GET ['r']);
 
-	//drupal_json(array('status' => 0, 'data' => block_list($region) ));
+	drupal_json(array('status' => 0, 'data' => $regions ));
 	
-	return "ooo";
+	$theme_key = $tmp;
+	
 }
