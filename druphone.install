@@ -1,0 +1,33 @@
+<?php
+function druphone_schema() {
+	$schema['druphone'] = array(
+		'description' => t('Save the settings of DruPhone'),
+		'fields' => array(
+			'id' => array(
+				'description' => t('The primary identifier'),
+				'type' => 'int',
+				'unsigned' => TRUE,
+				'not null' => TRUE),
+				
+			'theme' => array(
+				'description' => t('The theme name.'),
+				'type' => 'varchar',
+				'length' => '100',
+				'not null' => TRUE,
+				'not null' => TRUE),
+		),
+		'primary key' => array('id'),
+	);
+
+ 
+ return $schema;
+}
+ 
+function druphone_install() {
+ drupal_install_schema('druphone');
+}
+ 
+function druphone_uninstall() {
+ drupal_uninstall_schema('druphone');
+}
+?>

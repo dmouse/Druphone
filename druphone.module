@@ -79,24 +79,26 @@ function druphone_regions_list(){
 		$list[$var] = $key;
 	
 	echo json_encode(array('status' => 0, 'data' => $list ));
+	
 }
 
 function druphone_regions(){
 	
 	global $theme_key;
-	$tmp = $theme_key;
-	$theme_key = "garland";
-	
-	
+	$tmp_theme = $theme_key;
+	$tmp_q = $_GET['q'];
 	$region = mysql_escape_string ($_POST ['r']);
 	$regions = array();
 	
-	foreach (system_region_list("garland") as $var => $key){
-		if ($var == $region)
-		$regions[$var] = array("blocks" => json_encode(theme_blocks($region)));
-	}
+	$theme_key = "garland";
+	
+	$_GET['q'] = mysql_escape_string ($_POST['url']);
+	
+	$regions[$region] = array("blocks" => json_encode(theme_blocks($region)));
 
 	echo json_encode(array('status' => 0, 'data' => $regions ));
 	
-	$theme_key = $tmp;
+	//regresamos las variables a las anteriores
+	$theme_key = $tmp_theme;
+	$_GET['q'] = $tmp_q;
 }
