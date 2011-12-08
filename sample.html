@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Druphone</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+</head> 
+
+<body> 
+
+<div data-role="page">
+
+	<div id="header" data-role="header">
+		<h1></h1>
+	</div><!-- /header -->
+
+	<div id="contents" data-role="content">	
+		<ul data-role="listview" data-split-icon="gear" data-split-theme="d" class="ui-listview">
+			<li id="left"></li>
+			<li id="right"></li>
+			<li id="content"></li>
+		</ul>
+		
+	</div><!-- /content -->
+	
+	<div id="footer" data-role="footer">	</div>
+</div><!-- /page -->
+
+	<script type="text/javascript">
+		
+		function load_blocks(regions){
+			$.each(regions, function(i,v){
+				
+				$.ajax({
+					type:"POST",
+					dataType:"json",
+					data: "r="+i,
+					url:"/druphone/regions",
+					success: function( data ) {
+						$.each(data.data,function(i,v){
+							$("#"+i).append($.parseJSON(v.blocks));
+						});
+					},
+				});
+				
+			});
+		}
+	
+		$(document).ready(function(){
+			var regions;
+			
+			$.ajax({
+				url:"/druphone/regions/list",
+				dataType:"json",
+				success: function(data){
+					load_blocks(data.data);
+				}
+			});
+			
+		});
+	</script>
+	
+</body>
+</html>
