@@ -46,6 +46,9 @@ function admin_settings_druphone(){
 		$themes = list_themes();
 		$theme_list = array();
 		
+		$db_result = db_query("SELECT theme from {druphone}");
+		$row = db_fetch_object($db_result);
+		
 		foreach ($themes as $i => $k)
 			if ($k -> status)
 				$theme_list[$k -> name] = $k -> info['name'];
@@ -57,7 +60,7 @@ function admin_settings_druphone(){
 				'#title'=>t('Select theme'),
 				'#description' => t('Choose an option.'),
 				'#required'=>true,
-				'#default_value'=>'----',
+				'#default_value'=>$row->theme,
 				'#options' => $theme_list,
 				'#validate' => array('admin_settings_druphone_validate')
 		);
@@ -71,21 +74,32 @@ function admin_settings_druphone(){
 	}
 
 function admin_settings_druphone_validate($node, &$form_state){
-	$themes = $form_state['values']['theme'];
-	drupal_set_message("You submitted a ".$form_state['values']['theme']);
+	
 }
 
 function admin_settings_druphone_submit($node, &$form_state){
 	
-	drupal_set_message("Sumbit");
+	$theme = mysql_escape_string($form_state['values']['theme']);
 	
+	db_query("UPDATE {druphone} SET theme='%s'", $theme);
+	
+	drupal_set_message("Settings save " );
+	
+}
+
+function druphone_theme(){
+	$db_result = db_query("SELECT theme from {druphone}");
+	$row = db_fetch_object($db_result);
+	return $row -> theme;
 }
 
 function druphone_regions_list(){
 	
 	$list = array();
 	
-	foreach (system_region_list("garland") as $var => $key)
+	$theme_selected = druphone_theme();
+	
+	foreach (system_region_list($row->theme) as $var => $key)
 		$list[$var] = $key;
 	
 	echo json_encode(array('status' => 0, 'data' => $list ));
@@ -130,11 +144,14 @@ function druphone_script(){
 					data: "r="+i+"&url="+document.location.pathname,
 					url:"'.$base_url.'/druphone/regions",
 					success: function( data ) {
-						console.log("ok");
-						$.each(data.data,function(i,v){
-							console.log($.parseJSON(v.blocks));
-							$("#"+i).append($.parseJSON(v.blocks));
-						});
+						
+						if (data.nodes){
+							console.log(data.nodes);
+						}
+						else 
+							$.each(data.data,function(i,v){
+								$("#"+i).append($.parseJSON(v.blocks));
+							});
 					},
 				});
 				

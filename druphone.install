@@ -3,11 +3,11 @@ function druphone_schema() {
 	$schema['druphone'] = array(
 		'description' => t('Save the settings of DruPhone'),
 		'fields' => array(
-			'id' => array(
+			/*'id' => array(
 				'description' => t('The primary identifier'),
 				'type' => 'int',
 				'unsigned' => TRUE,
-				'not null' => TRUE),
+				'not null' => TRUE),*/
 				
 			'theme' => array(
 				'description' => t('The theme name.'),
@@ -16,7 +16,7 @@ function druphone_schema() {
 				'not null' => TRUE,
 				'not null' => TRUE),
 		),
-		'primary key' => array('id'),
+		//'primary key' => array('id'),
 	);
 
  
@@ -25,6 +25,8 @@ function druphone_schema() {
  
 function druphone_install() {
  drupal_install_schema('druphone');
+ db_query("INSERT INTO {druphone} VALUES('%s')", "garland");
+
 }
  
 function druphone_uninstall() {
