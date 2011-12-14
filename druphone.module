@@ -1,5 +1,15 @@
 <?php
 
+function druphone_theme() {
+  return array(
+    'filter_tips' => array(
+      'arguments' => array('tips' => NULL, 'long' => FALSE, 'extra' => ''),
+      'file' => 'druphone.pages.inc',
+    ),
+  );
+} 
+
+
 /**
  * Implements hook_menu().
  */
@@ -11,10 +21,21 @@ function druphone_menu() {
 		'description'=>'Edit settings',
     'page callback' => 'drupal_get_form',
     'page arguments'=>array('admin_settings_druphone'),
-    'type' => MENU_CALLBACK,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
     'access callback' => TRUE,
     'access arguments' => array('Admin dphone options'),
   );
+  
+
+  $items['admin/settings/druphone/options'] = array(
+      'title' => 'Add input format',
+      'page callback' => 'druphone_page',
+      'access arguments' => array('administer filters'),
+      'type' => MENU_LOCAL_TASK,
+      'weight' => 1,
+   );
+
+  
   
   $items['druphone/regions/list'] = array(
     'type' => MENU_CALLBACK,
@@ -69,6 +90,10 @@ function admin_settings_druphone(){
 				'#type'=>'submit',
 				'#value'=>'Save',
 				'#weight'=>2);
+
+    $form ['tabs'] = array(
+      '#type' => 'tabs',
+    );
 
 		return $form;
 	}
