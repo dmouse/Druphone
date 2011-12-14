@@ -87,7 +87,7 @@ function admin_settings_druphone_submit($node, &$form_state){
 	
 }
 
-function druphone_theme(){
+function druphone_select_theme(){
 	$db_result = db_query("SELECT theme from {druphone}");
 	$row = db_fetch_object($db_result);
 	return $row -> theme;
@@ -97,9 +97,9 @@ function druphone_regions_list(){
 	
 	$list = array();
 	
-	$theme_selected = druphone_theme();
+	$theme_selected = druphone_select_theme();
 	
-	foreach (system_region_list($row->theme) as $var => $key)
+	foreach (system_region_list( $theme_selected ) as $var => $key)
 		$list[$var] = $key;
 	
 	echo json_encode(array('status' => 0, 'data' => $list ));
@@ -114,7 +114,7 @@ function druphone_regions(){
 	$region = mysql_escape_string ($_POST ['r']);
 	$regions = array();
 	
-	$theme_key = "garland";
+	$theme_key = druphone_select_theme();
 	
 	$_GET['q'] = mysql_escape_string ($_POST['url']);
 	
@@ -156,7 +156,5 @@ function druphone_script(){
 				});
 				
 			});
-		}';
-	
-	
+		}';	
 }
